@@ -1,7 +1,7 @@
 Requires [MelonLoader](https://melonloader.co/)
 
 Mod Install:
-1. Download latest release from [Releases]((https://github.com/AutumnIsDolphin/DB_Hybrids/releases)).
+1. Download latest release from [Releases](https://github.com/AutumnIsDolphin/DB_Hybrids/releases).
 2. Put the `DB_Hybrids.dll` in your mods folder.
 3. Launch the game.
 
