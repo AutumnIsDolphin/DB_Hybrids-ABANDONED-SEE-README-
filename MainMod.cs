@@ -16,7 +16,7 @@ using System.Resources;
 using DB_Hybrids;
 using Color = UnityEngine.Color;
 
-[assembly: MelonInfo(typeof(MainMod), "DB_Hybrids", "1.0.0", "AutumnIsDolphin")]
+[assembly: MelonInfo(typeof(MainMod), "DB_Hybrids", "2.0.0", "AutumnIsDolphin")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
 
 namespace DB_Hybrids
@@ -27,6 +27,8 @@ namespace DB_Hybrids
         {
             ClassInjector.RegisterTypeInIl2Cpp<Scover>();
             ClassInjector.RegisterTypeInIl2Cpp<Hout>();
+            ClassInjector.RegisterTypeInIl2Cpp<Barchitect>();
+            ClassInjector.RegisterTypeInIl2Cpp<Chaman>();
             MelonLogger.Msg("Successfully loaded");
         }
 
@@ -37,7 +39,7 @@ namespace DB_Hybrids
             scover.role = new Scover();
             scover.name = "Scover";
             scover.description = "Learn how many Evils are adjacent to another Evil.";
-            scover.flavorText = "#ship";
+            scover.flavorText = "TBD";
             scover.hints = "";
             scover.ifLies = "";
             scover.startingAlignment = EAlignment.Good;
@@ -71,11 +73,52 @@ namespace DB_Hybrids
             hout.cardBorderColor = new Color(0.7133f, 0.339f, 0.8679f);
             hout.color = new Color(1f, 0.935f, 0.7302f);
 
+            // Barchitect
+            CharacterData barchitect = new CharacterData();
+            barchitect.role = new Barchitect();
+            barchitect.name = "Barchitect";
+            barchitect.description = "Learn which side is more corrupted.";
+            barchitect.flavorText = "TBD";
+            barchitect.hints = "";
+            barchitect.ifLies = "";
+            barchitect.startingAlignment = EAlignment.Good;
+            barchitect.type = ECharacterType.Villager;
+            barchitect.bluffable = true;
+            barchitect.picking = false;
+            barchitect.characterId = "barchitect_AID";
+            barchitect.artBgColor = new Color(0.111f, 0.0833f, 0.1415f);
+            barchitect.cardBgColor = new Color(0.26f, 0.1519f, 0.3396f);
+            barchitect.cardBorderColor = new Color(0.7133f, 0.339f, 0.8679f);
+            barchitect.color = new Color(1f, 0.935f, 0.7302f);
+
+            // chaman
+            CharacterData chaman = new CharacterData();
+            chaman.role = new Chaman();
+            chaman.name = "Chaman";
+            chaman.description = "I create an outcast and then duplicate it." +
+                "\nI Lie and Disguise.";
+            chaman.flavorText = "TBD";
+            chaman.hints = "";
+            chaman.ifLies = "";
+            chaman.startingAlignment = EAlignment.Evil;
+            chaman.type = ECharacterType.Minion;
+            chaman.bluffable = false;
+            chaman.picking = false;
+            chaman.characterId = "chaman_AID";
+            chaman.artBgColor = new Color(1f, 0f, 0f);
+            chaman.cardBgColor = new Color(0.0941f, 0.0431f, 0.0431f);
+            chaman.cardBorderColor = new Color(0.8208f, 0f, 0.0241f);
+            chaman.color = new Color(0.8491f, 0.4555f, 0f);
+            Characters.Instance.startGameActOrder = insertAfterAct("Chancellor", chaman);
+
             AscensionsData advancedAscension = ProjectContext.Instance.gameData.advancedAscension;
             foreach (CustomScriptData scriptData in advancedAscension.possibleScriptsData)
             {
                 ScriptInfo script = scriptData.scriptInfo;
                 addRole(script.startingTownsfolks, scover);
+                addRole(script.startingTownsfolks, hout);
+                addRole(script.startingTownsfolks, barchitect);
+                addRole(script.startingMinions, chaman);
             }
         }
 
@@ -103,6 +146,36 @@ namespace DB_Hybrids
                 return;
             }
             list.Add(data);
+        }
+
+        public CharacterData[] insertAfterAct(string previous, CharacterData data)
+        {
+            CharacterData[] actList = Characters.Instance.startGameActOrder;
+            int actSize = actList.Length;
+            CharacterData[] newActList = new CharacterData[actSize + 1];
+            bool inserted = false;
+            for (int i = 0; i < actSize; i++)
+            {
+                if (inserted)
+                {
+                    newActList[i + 1] = actList[i];
+                }
+                else
+                {
+                    newActList[i] = actList[i];
+                    if (actList[i].name == previous)
+                    {
+                        newActList[i + 1] = data;
+                        inserted = true;
+                    }
+                }
+            }
+
+            if (!inserted)
+            {
+                LoggerInstance.Msg("");
+            }
+            return newActList;
         }
     }
 }
