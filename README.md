@@ -1,3 +1,8 @@
+This mod is abandoned.
+If you would like to expand or take over this mod, message autumnisdolphin on discord.
+
+
+
 Requires [MelonLoader](https://melonloader.co/)
 
 Mod Install:
